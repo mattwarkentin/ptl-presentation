@@ -1,0 +1,7 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+example/mnist
+example/lightning_logs
+.DS_Store

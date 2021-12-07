@@ -1,0 +1,110 @@
+:root {
+  --sinai-blue: rgb(74, 199, 233);
+  --sinai-red: rgb(255, 35, 60);
+  --sinai-orange: rgb(255, 190, 0);
+  --opaque-box-color: rgba(255, 255, 255, 0.9);
+  --remark-font: 'Yanone Kaffeesatz';
+  --title-font-color: white;
+}
+
+/* TITLE SLIDE */
+.title-bg {
+  background-image: url(https://images.unsplash.com/photo-1465799522714-8eb0e6fccf73?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1313&q=80);
+  background-size: cover;
+}
+.talk-title {
+  color: var(--title-font-color);
+  margin-bottom: 30px;
+  font-size: 2.2rem;
+}
+.talk-subtitle {
+  color: var(--title-font-color);
+  font-style: italic;
+  font-size: 1.8rem;
+  margin-bottom: 80px;
+}
+.talk-meta {
+  color: var(--title-font-color);
+  left: 1rem;
+  width: 100%;
+}
+.talk-author {
+  color: var(--title-font-color);
+  font-size: 1.8rem;
+}
+.talk-social {
+  color: var(--title-font-color);
+  font-size: 1.2rem;
+}
+.talk-date {
+  color: var(--title-font-color);
+  font-size: 1.8rem;
+  padding-top: 10px;
+}
+.sinai-blue {
+  color: var(--sinai-blue);
+}
+.sinai-red {
+  color: var(--sinai-red);
+}
+.sinai-orange {
+  color: var(--sinai-orange);
+}
+
+/* GENERAL STYLING */
+.highlight-last-item > ul > li,
+.highlight-last-item > ol > li {
+  opacity: 0.4;
+}
+.highlight-last-item > ul > li:last-of-type,
+.highlight-last-item > ol > li:last-of-type {
+  opacity: 1;
+}
+.hide-count .remark-slide-number {
+  display: none;
+}
+.bg-white-o90 {
+  background-color: var(--opaque-box-color);
+}
+.remark-font {
+  font-family: var(--remark-font);
+}
+
+.ltri-logo {
+  position: absolute;
+  width: 600px;
+  right: 50px;
+  top: 200px;
+}
+
+.dlsph-logo {
+  position: absolute;
+  width: 600px;
+  right: 50px;
+  top: 350px;
+}
+
+.pluss-ct {
+  position: absolute;
+  border-radius: 10px;
+  width: 40%;
+  right: 100px;
+  bottom: 50px;
+}
+
+.mask-nodule {
+  position: absolute;
+  width: 400px;
+  border-radius: 2%;
+  right: 80px;
+  top: 200px;
+}
+
+.lung-mask {
+  border-radius: 10%;
+}
+
+.footnote {
+  position: absolute;
+  bottom: 5px;
+}

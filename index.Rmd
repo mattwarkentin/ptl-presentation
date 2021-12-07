@@ -1,0 +1,274 @@
+---
+title: "PyTorch Lightning: Deep Learning API for PyTorch"
+subtitle: "Campbell Lab Meeting: Tech Talk"
+author: 
+  - Matt Warkentin
+institute: "Lunenfeld-Tanenbaum Research Institute, .b[.sinai-blue[Sinai] .sinai-orange[Health] .sinai-red[System]]"
+date: 'TBD'
+always_allow_html: true
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: 
+      - css/xaringan-theme.css
+      - css/style.css
+    seal: false
+    nature:
+      titleSlideClass: ["bottom", "left", "hide-count"]
+      slideNumberFormat: "%current%"
+      highlightStyle: atom-one-light
+      highlightLines: true
+      ratio: 16:9
+      countIncrementalSlides: true
+      navigation:
+        scroll: false
+---
+
+name: title
+class: left middle hide-count title-bg
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+source("xaringan-theme.R")
+source("setup.R")$value
+library(htmltools)
+library(glue)
+```
+
+```{r title-slide, echo=FALSE, message = FALSE, warning = FALSE}
+ids <-
+  c(
+    fontawesome::fa('video', fill = '#FFFFFF')
+  )
+htmltools::withTags(
+  div(
+    class = "talk-meta",
+    div(
+      p(rmarkdown::metadata$title, class = "talk-title"),
+      p(rmarkdown::metadata$subtitle, class = "talk-subtitle")
+    ),
+    div(
+      class = "talk-author",
+      glue_collapse(
+        glue("<span>{ids} {rmarkdown::metadata$author}</span>"), 
+        sep = "<br>"
+      ),
+      br(), 
+      br(),
+      div(
+        fontawesome::fa('home', fill = '#FFFFFF'),
+        rmarkdown::metadata$institute
+        )
+    ),
+    div(
+      class = "talk-date",
+      span(
+        fontawesome::fa('calendar-alt', fill = '#FFFFFF'),
+        rmarkdown::metadata$date
+      )
+    )
+  )
+)
+```
+
+---
+
+# Background
+
+---
+
+# Every Deep Learning Project...
+
+```py
+for i in range(epochs):
+  for j in range(train_batches):
+    # put model in train mode
+    # assemble a batch
+    # forward pass
+    # compute loss
+    # log metrics
+    # zero gradients
+    # backward step
+    # optimizer step
+  
+  for j in range(valid_batches):
+    # put model in eval mode
+    # assemble a batch
+    # forward pass
+    # compute loss
+    # log metrics
+```
+
+---
+
+class: lh-copy
+
+# PyTorch Lightning API
+
+.left-column[
+#### LightningModule
+]
+
+.right-column[
+```py
+import pytorch_lightning as pl
+
+class MySweetModel(pl.LightningModule):
+    __init__(self, ...):
+        pass
+    
+    forward(self, x):
+        return y_hat
+    
+    configure_optimizers(self):
+        return optimizer
+    
+    training_step(self, batch, batch_id):
+        return train_loss
+```
+]
+
+---
+
+class: lh-copy
+
+# PyTorch Lightning API
+
+.left-column[
+#### .gray[LightningModule]
+
+#### LightningDataModule
+]
+
+.right-column[
+```py
+class MySweetData(pl.LightningDataModule):
+    __init__(self, ...):
+        pass
+    
+    prepare_data(self):
+        # download data
+    
+    setup(self, stage)
+        # train/validation/test splits
+        # define any transforms
+        # create PyTorch Dataset
+        
+    train_dataloader(self):
+        return train_dl
+```
+]
+
+---
+
+class: lh-copy
+
+# PyTorch Lightning API
+
+.left-column[
+#### .gray[LightningModule]
+
+#### .gray[LightningDataModule]
+
+#### Trainer
+]
+
+.right-column[
+- There are many arguments that can be passed to your trainer to configure the training process
+
+```py
+trainer = pl.Trainer(
+  min_epochs=10,
+  max_epochs=100,
+  callbacks=...,
+  logger=...,
+  profiler='simple'
+  # fast_dev_run=False/True/int
+  # overfit_batches=10
+  # num_sanity_val_steps=2
+)
+```
+]
+
+---
+
+class: lh-copy
+
+# PyTorch Lightning API
+
+.left-column[
+#### .gray[LightningModule]
+
+#### .gray[LightningDataModule]
+
+#### Trainer
+]
+
+.right-column[
+- Create instances of your model and data module and pass them to the `fit()` method of the `trainer` to begin the fitting process
+
+```py
+model = MySweetModel()
+data = MySweetData()
+
+trainer = pl.Trainer(...)
+
+trainer.fit(model, data)
+```
+]
+
+---
+
+class: lh-copy
+
+# PyTorch Lightning API
+
+.left-column[
+#### .gray[LightningModule]
+
+#### .gray[LightningDataModule]
+
+#### Trainer
+]
+
+.right-column[
+#### Callbacks and Loggers
+
+```py
+log_csv = CSVLogger()
+log_tb = TensorBoardLogger()
+
+cb_progress = RichProgressBar()
+cb_earlystop = EarlyStopping()
+cb_chkpt = ModelCheckpoint()
+
+trainer = pl.Trainer(
+  ...,
+  callbacks=[cb_progress, cb_earlystop, cb_chkpt],
+  logger=[log_csv, log_tb]
+)
+
+trainer.fit(model, data)
+```
+]
+
+---
+
+class: lh-copy
+
+# `r fontawesome::fa('question-circle')` Helpful Resources
+
+.pull-left[
+- [PyTorch Lightning Documentation](https://pytorch-lightning.readthedocs.io/en/latest/?_ga=2.113270336.699856249.1638893730-1586744328.1636324376)
+
+- [TorchMetrics](https://torchmetrics.readthedocs.io/en/latest/)
+
+- [Torchvision](https://pytorch.org/vision/stable/index.html)
+
+- [PyTorch Lightning Flash](https://lightning-flash.readthedocs.io/en/latest/)
+
+- [PyTorch Lightning Bolts](https://pytorch-lightning.readthedocs.io/en/latest/ecosystem/bolts.html)
+]
+
+.pull-right[
+
+]
