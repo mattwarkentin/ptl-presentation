@@ -4,7 +4,7 @@ subtitle: "Campbell Lab Meeting: Tech Talk"
 author: 
   - Matt Warkentin
 institute: "Lunenfeld-Tanenbaum Research Institute, .b[.sinai-blue[Sinai] .sinai-orange[Health] .sinai-red[System]]"
-date: 'TBD'
+date: 'June 10th, 2022'
 always_allow_html: true
 output:
   xaringan::moon_reader:
@@ -249,6 +249,72 @@ trainer = pl.Trainer(
 
 trainer.fit(model, data)
 ```
+]
+
+---
+
+# PyTorch Lightning API
+
+.left-column[
+#### .gray[LightningModule]
+
+#### .gray[LightningDataModule]
+
+#### .gray[Trainer]
+
+#### What else?
+]
+
+.right-column[
+- So so much...
+
+- Solid documentation/examples
+
+- Hooks everywhere
+
+- Callbacks
+    + Early stopping
+    + Model checkpoints
+    + Model pruning
+    + Progress bars
+    + Custom? Inherit from `Callback`
+
+- Loggers
+    + CSV, Tensorboard, Weights and Biases, and more...
+    
+- Profiling
+]
+
+---
+
+# PyTorch Lightning API
+
+.left-column[
+#### .gray[LightningModule]
+
+#### .gray[LightningDataModule]
+
+#### .gray[Trainer]
+
+#### What else?
+]
+
+.right-column[
+- Accelerators
+    + CPU, GPU, HPU, IPU, TPU...
+    + GPU-acceleration for Macs
+        + <https://github.com/PyTorchLightning/pytorch-lightning/issues/13102>
+        
+- Plugins for mixed precision
+
+- Strategies
+
+- LightningCLI for command-line use
+
+- Environments with support for SLURM
+    + Including auto-requeing
+
+- Or use `test-tube` to easily construct SLURM submission scripts and enable hyperparameter tuning/grid search 
 ]
 
 ---

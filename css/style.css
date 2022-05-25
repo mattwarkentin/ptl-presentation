@@ -19,7 +19,6 @@
 }
 .talk-subtitle {
   color: var(--title-font-color);
-  font-style: italic;
   font-size: 1.8rem;
   margin-bottom: 80px;
 }

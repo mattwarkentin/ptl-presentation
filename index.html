@@ -51,7 +51,7 @@ Lunenfeld-Tanenbaum Research Institute, .b[.sinai-blue[Sinai] .sinai-orange[Heal
 <div class="talk-date">
 <span>
 <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#FFFFFF;overflow:visible;position:relative;"><path d="M0 464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12v-40zM400 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48H48C21.5 64 0 85.5 0 112v48h448v-48c0-26.5-21.5-48-48-48z"/></svg>
-TBD
+June 10th, 2022
 </span>
 </div>
 </div>
@@ -235,6 +235,72 @@ trainer = pl.Trainer(
 
 trainer.fit(model, data)
 ```
+]
+
+---
+
+# PyTorch Lightning API
+
+.left-column[
+#### .gray[LightningModule]
+
+#### .gray[LightningDataModule]
+
+#### .gray[Trainer]
+
+#### What else?
+]
+
+.right-column[
+- So so much...
+
+- Solid documentation/examples
+
+- Hooks everywhere
+
+- Callbacks
+    + Early stopping
+    + Model checkpoints
+    + Model pruning
+    + Progress bars
+    + Custom? Inherit from `Callback`
+
+- Loggers
+    + CSV, Tensorboard, Weights and Biases, and more...
+    
+- Profiling
+]
+
+---
+
+# PyTorch Lightning API
+
+.left-column[
+#### .gray[LightningModule]
+
+#### .gray[LightningDataModule]
+
+#### .gray[Trainer]
+
+#### What else?
+]
+
+.right-column[
+- Accelerators
+    + CPU, GPU, HPU, IPU, TPU...
+    + GPU-acceleration for Macs
+        + &lt;https://github.com/PyTorchLightning/pytorch-lightning/issues/13102&gt;
+        
+- Plugins for mixed precision
+
+- Strategies
+
+- LightningCLI for command-line use
+
+- Environments with support for SLURM
+    + Including auto-requeing
+
+- Or use `test-tube` to easily construct SLURM submission scripts and enable hyperparameter tuning/grid search 
 ]
 
 ---
