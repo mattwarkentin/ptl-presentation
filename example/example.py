@@ -122,6 +122,8 @@ def main():
         max_epochs=25,
         callbacks=callbacks,
         logger=loggers,
+        accelerator='auto',
+        devices='auto',
         #fast_dev_run=True,
         #val_check_interval=0.25,
         #profiler='simple',
