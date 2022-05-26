@@ -66,30 +66,30 @@ def main():
             return self.model(x)[0]
 
         def training_step(self, batch, batch_id):
-            x,y = batch
-            y_hat = self(x)
-            loss = self.loss(y_hat, y)
+            x,y_true = batch
+            y_pred = self(x)
+            loss = self.loss(y_pred, y_true)
             self.log('train_loss', loss, prog_bar=True)
-            prob = torch.sigmoid(y_hat)
-            self.acc_train(prob, y)
-            self.log('train_acc', self.acc_train, on_step=False, on_epoch=True)
+            y_prob = y_pred.softmax(dim=-1)
+            self.acc_train(y_prob, y_true)
+            self.log('train_acc', self.acc_train, on_step=True, on_epoch=True)
             return loss
 
         def validation_step(self, batch, batch_id):
-            x,y = batch
-            y_hat = self(x)
-            loss = self.loss(y_hat, y)
+            x,y_true = batch
+            y_pred = self(x)
+            loss = self.loss(y_pred, y_true)
             self.log('valid_loss', loss, prog_bar=True)
-            prob = torch.sigmoid(y_hat)
-            self.acc_valid(prob, y)
-            self.log('valid_acc', self.acc_valid, on_step=False, on_epoch=True)
+            y_prob = y_pred.softmax(dim=-1)
+            self.acc_valid(y_prob, y_true)
+            self.log('valid_acc', self.acc_valid, on_step=True, on_epoch=True)
             return loss
 
         def test_step(self, batch, batch_id):
-            x,y = batch
-            y_hat = self(x)
-            prob = torch.sigmoid(y_hat)
-            self.acc_valid(prob, y)
+            x,y_true = batch
+            y_pred = self(x)
+            y_prob = y_pred.softmax(dim=-1)
+            self.acc_valid(y_prob, y_true)
             self.log('test_acc', self.acc_valid, on_step=False, on_epoch=True)
             return None
 
