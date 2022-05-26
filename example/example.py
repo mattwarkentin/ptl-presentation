@@ -60,7 +60,19 @@ def main():
             self.acc_test = tm.Accuracy(num_classes=10)
         
         def configure_optimizers(self):
-            return torch.optim.Adam(self.model.parameters(), lr=1e-3)
+            optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-3)
+            return {
+                "optimizer": optimizer,
+                "lr_scheduler": {
+                    "scheduler": ReduceLROnPlateau(
+                        optimizer,
+                        mode="min",
+                        patience=5,
+                        verbose=True
+                    ),
+                    "monitor": "valid_loss"
+                }
+            }
 
         def forward(self, x):
             return self.model(x)[0]
@@ -107,7 +119,7 @@ def main():
     cb_earlystop = EarlyStopping(
         monitor='valid_loss',
         mode='min',
-        patience=5,
+        patience=10,
         check_on_train_epoch_end=False,
         verbose=True
     )
