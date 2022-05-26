@@ -93,6 +93,12 @@ def main():
             self.log('test_acc', self.acc_valid, on_step=False, on_epoch=True)
             return None
 
+        def predict_step(self, batch, batch_id):
+            x,y_true = batch
+            y_pred = self(x)
+            y_prob = y_pred.softmax(dim=-1)
+            return [x, y_true, y_prob]
+
     log_csv = CSVLogger('example/lightning_logs', 'metrics')
     log_tb = TensorBoardLogger('example/lightning_logs', 'tensorboard')
     loggers = [log_csv, log_tb]
@@ -116,7 +122,7 @@ def main():
 
     trainer = pl.Trainer(
         min_epochs=1,
-        max_epochs=25,
+        max_epochs=100,
         callbacks=callbacks,
         logger=loggers,
         accelerator='auto',
