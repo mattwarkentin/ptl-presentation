@@ -129,7 +129,7 @@ def main():
 
     trainer = pl.Trainer(
         min_epochs=1,
-        max_epochs=2,
+        max_epochs=5,
         limit_train_batches=0.05,
         limit_val_batches=0.05,
         limit_test_batches=0.05,
