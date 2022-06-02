@@ -129,10 +129,10 @@ def main():
 
     trainer = pl.Trainer(
         min_epochs=1,
-        max_epochs=5,
-        limit_train_batches=0.05,
-        limit_val_batches=0.05,
-        limit_test_batches=0.05,
+        max_epochs=10,
+        limit_train_batches=0.1,
+        limit_val_batches=0.1,
+        limit_test_batches=0.1,
         callbacks=callbacks,
         logger=loggers,
         accelerator='auto',
