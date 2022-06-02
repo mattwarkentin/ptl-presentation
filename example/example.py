@@ -84,7 +84,7 @@ def main():
             self.log('train_loss', loss, prog_bar=True)
             y_prob = y_pred.softmax(dim=-1)
             self.acc_train(y_prob, y_true)
-            self.log('train_acc', self.acc_train, on_step=True, on_epoch=True)
+            self.log('train_acc', self.acc_train, on_step=True, prog_bar=True)
             return loss
 
         def validation_step(self, batch, batch_id):
@@ -94,7 +94,7 @@ def main():
             self.log('valid_loss', loss, prog_bar=True)
             y_prob = y_pred.softmax(dim=-1)
             self.acc_valid(y_prob, y_true)
-            self.log('valid_acc', self.acc_valid, on_step=True, on_epoch=True)
+            self.log('valid_acc', self.acc_valid, on_epoch=True, on_step=False)
             return loss
 
         def test_step(self, batch, batch_id):
@@ -104,12 +104,6 @@ def main():
             self.acc_valid(y_prob, y_true)
             self.log('test_acc', self.acc_valid, on_step=False, on_epoch=True)
             return None
-
-        def predict_step(self, batch, batch_id):
-            x,y_true = batch
-            y_pred = self(x)
-            y_prob = y_pred.softmax(dim=-1)
-            return [x, y_true, y_prob]
 
     log_csv = CSVLogger('example/lightning_logs', 'metrics')
     log_tb = TensorBoardLogger('example/lightning_logs', 'tensorboard')
@@ -130,11 +124,15 @@ def main():
         save_top_k=1,
         filename='{epoch}_{step}_{valid_loss:.3f}'
     )
+
     callbacks = [cb_progress, cb_earlystop, cb_chkpt]
 
     trainer = pl.Trainer(
         min_epochs=1,
-        max_epochs=100,
+        max_epochs=2,
+        limit_train_batches=0.05,
+        limit_val_batches=0.05,
+        limit_test_batches=0.05,
         callbacks=callbacks,
         logger=loggers,
         accelerator='auto',

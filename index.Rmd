@@ -92,11 +92,11 @@ class: lh-copy
 
 # Problems with high-level libraries
 
-- Debatably, Keras is to Tensorflow what PyTorch Lightning/Ignite/Other are to PyTorch
+- Debatably, Keras is to Tensorflow what PyTorch Lightning/Ignite/FastAI/Other are to PyTorch
 
 - My primary issue with Keras was that it was too *hand-holdy*
 
-- It works really well for "traditional" projects, but as soon as you needed to deviate from the anticipated workflow, there was a lot of friction
+- It works really well for "traditional" deep learning projects, but as soon as you needed to deviate from the anticipated workflow, there was a lot of friction
 
 - In other words, Keras abstracted away technical debt at the cost of losing flexibility
 
@@ -105,7 +105,7 @@ class: lh-copy
 - Why is **PyTorch Lightning** different?
     + PyTorch Lightning isn't an abstraction, it is PyTorch
     + Anything that can be achieved with vanilla PyTorch can be done with PTL
-    + Your project can be as simple or complex as you desired, it is simply a matter of the "helper" code in PTL you want to overwrite
+    + Your project can be as simple or complex as you desire; decide how much PTL code you want to overwrite...
 
 
 ---
@@ -161,8 +161,11 @@ for i in range(epochs):
 # PyTorch Lightning API
 
 - PTL provides a class called a `LightningModule` which wraps up the logic for training a deep learning model
+    + Note: `LightningModule` is a `nn.Module` with extra features
 
-- As a user, your model needs to subclass the `LightningModule` class and define a small number of methods, while letting PTL handle the rest
+- As a user, your model needs to subclass the `LightningModule` and define a small number of methods, while letting PTL handle the rest
+
+--
 
 - Requisite methods:
     + `init`
@@ -189,16 +192,16 @@ class: lh-copy
 import pytorch_lightning as pl
 
 class MySweetModel(pl.LightningModule):
-    __init__(self, ...):
+    def __init__(self, ...):
         pass
     
-    forward(self, x):
+    def forward(self, x):
         return y_hat
     
-    configure_optimizers(self):
+    def configure_optimizers(self):
         return optimizer
     
-    training_step(self, batch, batch_id):
+    def training_step(self, batch, batch_id):
         return train_loss
 ```
 ]
@@ -212,6 +215,8 @@ class MySweetModel(pl.LightningModule):
 - Taken together, the data logic and model logic should be transportable and work in (almost) any environment
 
 > A datamodule is a shareable, reusable class that encapsulates all the steps needed to process data
+
+--
 
 - Similar to `LightningModule`, your data module should subclass `LightningDataModule` and define some important methods
 
@@ -237,18 +242,18 @@ class: lh-copy
 .right-column[
 ```py
 class MySweetData(pl.LightningDataModule):
-    __init__(self, ...):
+    def __init__(self, ...):
         pass
     
-    prepare_data(self):
-        # Download data
+    def prepare_data(self):
+        # Performed only once (e.g. download data)
     
-    setup(self, stage)
+    def setup(self, stage):
         # Train/validation/test splits
         # Define any transforms
         # Create PyTorch Dataset(s)
         
-    train_dataloader(self):
+    def train_dataloader(self):
         return train_dl
 ```
 ]
@@ -270,7 +275,7 @@ class: lh-copy
 .right-column[
 > Once you’ve organized your PyTorch code into a LightningModule, the Trainer automates everything else.
 
-- There are many arguments that can be passed to your trainer to configure the training process
+- There are many arguments that can be passed to your trainer to configure the training process ([docs](https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html))
 
 ```py
 trainer = pl.Trainer(
@@ -324,7 +329,7 @@ class: lh-copy
 
 #### .gray[LightningDataModule]
 
-#### .gray[LightningDataModule]
+#### .gray[Trainer]
 
 #### Hooks
 ]
@@ -334,7 +339,7 @@ class: lh-copy
 
 - That task can be basically anything you want
 
-- The pre-built callbacks are defined using these hooks, by performing some task (e.g. saving a model checkpoint) at the right point in the process
+- Pre-built callbacks are defined using these hooks, by performing some task (e.g. saving a model checkpoint) at the right point in the process
 
 - [Pseudocode of hooks](https://pytorch-lightning.readthedocs.io/en/stable/common/lightning_module.html#hooks)
 
@@ -374,7 +379,7 @@ trainer = pl.Trainer(
   callbacks=[cb_progress, cb_earlystop, cb_chkpt]
 )
 
-trainer.fit(model, data)
+trainer.fit(model, datamodule)
 ```
 ]
 
@@ -401,16 +406,16 @@ class: lh-copy
 
 ```py
 class EmailMe(Callback):
-    __init__(self, address):
-        self.address = address
+  def __init__(self, address):
+      self.address = address
     
-    on_validation_epoch_end(trainer, pl_module):
-        # Some code to send me an email
+  def on_validation_epoch_end(self, trainer, pl_module):
+      # Some code to send me an email
 
 cb_email = EmailMe('warkentin@lunenfeld.ca')
 
 trainer = pl.Trainer(callbacks=[cb_email])
-trainer.fit(model, data)
+trainer.fit(model, datamodule)
 ```
 ]
 
@@ -448,7 +453,7 @@ trainer = pl.Trainer(
   logger=[log_csv, log_tb]
 )
 
-trainer.fit(model, data)
+trainer.fit(model, datamodule)
 ```
 ]
 
@@ -482,7 +487,7 @@ trainer.fit(model, data)
 - Callbacks
     + Early stopping
     + Model checkpoints
-    + Model pruning
+    + Model pruning/quantization
     + Progress bars
     + Custom? Inherit from `Callback`
 
@@ -503,25 +508,61 @@ trainer.fit(model, data)
 
 #### .gray[Trainer]
 
+#### .gray[Hooks]
+
+#### .gray[Callbacks]
+
+#### .gray[Loggers]
+
 #### What else?
 ]
 
 .right-column[
 - Accelerators
+    + Train on non-CPU resources without changing a single line of code
     + CPU, GPU, HPU, IPU, TPU...
-    + GPU-acceleration for M1 Macs
-        + <https://github.com/PyTorchLightning/pytorch-lightning/pull/13123>
+    + GPU-acceleration for M1 Macs (coming very soon)
         
 - Plugins for mixed precision training
 
-- Strategies
+- Training Strategies (e.g. DDP, Bagua, etc.)
 
 - LightningCLI for command-line use
 
-- Environment support for SLURM
-    + Including auto-requeuing
+- First-class environment support for SLURM
+    + Including auto-requeing
+    + Or use `test-tube` to easily construct SLURM submission scripts and enable hyperparameter tuning/grid search
+]
 
-- Or use `test-tube` to easily construct SLURM submission scripts and enable hyperparameter tuning/grid search 
+---
+
+# PyTorch Lightning API
+
+.left-column[
+#### .gray[LightningModule]
+
+#### .gray[LightningDataModule]
+
+#### .gray[Trainer]
+
+#### .gray[Hooks]
+
+#### .gray[Callbacks]
+
+#### .gray[Loggers]
+
+#### What else?
+]
+
+.right-column[
+- TorchMetrics
+    > TorchMetrics is a collection of 80+ PyTorch metrics implementations and an easy-to-use API to create custom metrics.
+
+- Lightning Flash
+    > Flash is a high-level deep learning framework for fast prototyping, baselining, finetuning and solving deep learning problems. 
+
+- Lightning Bolts
+    > PyTorch Lightning Bolts, is our official collection of prebuilt models across many research domains.
 ]
 
 ---
@@ -543,7 +584,10 @@ class: lh-copy
 ]
 
 .pull-right[
-
+```{r echo=FALSE}
+knitr::include_graphics('imgs/Pytorch_logo.png')
+knitr::include_graphics('imgs/Lightning_logo.png')
+```
 ]
 
 ---
